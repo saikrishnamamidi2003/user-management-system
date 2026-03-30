@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const BASE_URL = "http://localhost:8080";
+
 function UserForm() {
 
   const [name, setName] = useState("");
@@ -14,7 +16,7 @@ function UserForm() {
       email: email
     };
 
-    axios.post("http://localhost:8080/users", user)
+    axios.post(`${BASE_URL}/users`, user)
       .then(response => {
         console.log("User added:", response.data);
         setName("");
