@@ -1,3 +1,4 @@
+import "./App.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -22,7 +23,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <h1>User Management System</h1>
 
       <UserForm 
@@ -38,6 +39,7 @@ function App() {
       />
     </div>
   );
+    
 }
 
 export default App;
