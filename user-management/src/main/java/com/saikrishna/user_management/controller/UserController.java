@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.saikrishna.user_management.entity.User;
 import com.saikrishna.user_management.service.UserService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/users")
 public class UserController {
