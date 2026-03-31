@@ -1,35 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import axios from "axios";
-import BASE_URL from "../api";
+const BASE_URL = "http://localhost:8080";
 
-function UserList() {
+function UserList({ users, fetchUsers, setEditUser }) {
 
-  const [users, setUsers] = useState([]);
-
-  // fetch users
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = () => {
-    axios.get(`${BASE_URL}/users`)
-      .then(res => {
-        setUsers(res.data);
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  };
-
-  // delete user
   const deleteUser = (id) => {
     axios.delete(`${BASE_URL}/users/${id}`)
-      .then(() => {
-        fetchUsers(); // refresh list
-      })
-      .catch(err => {
-        console.error(err);
-      });
+      .then(() => fetchUsers())
+      .catch(err => console.error(err));
   };
 
   return (
@@ -53,6 +31,10 @@ function UserList() {
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>
+                <button onClick={() => setEditUser(user)}>
+                  Edit
+                </button>
+
                 <button onClick={() => deleteUser(user.id)}>
                   Delete
                 </button>

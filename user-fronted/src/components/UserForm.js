@@ -1,35 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const BASE_URL = "http://localhost:8080";
 
-function UserForm() {
+function UserForm({ fetchUsers, editUser, setEditUser }) {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
+  // fill form when editing
+  useEffect(() => {
+    if (editUser) {
+      setName(editUser.name);
+      setEmail(editUser.email);
+    }
+  }, [editUser]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const user = {
-      name: name,
-      email: email
-    };
+    const user = { name, email };
 
-    axios.post(`${BASE_URL}/users`, user)
-      .then(response => {
-        console.log("User added:", response.data);
-        setName("");
-        setEmail("");
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
+    if (editUser) {
+      // UPDATE
+      axios.put(`${BASE_URL}/users/${editUser.id}`, user)
+        .then(() => {
+          fetchUsers();
+          setEditUser(null);
+          setName("");
+          setEmail("");
+        })
+        .catch(err => console.error(err));
+    } else {
+      // CREATE
+      axios.post(`${BASE_URL}/users`, user)
+        .then(() => {
+          fetchUsers();
+          setName("");
+          setEmail("");
+        })
+        .catch(err => console.error(err));
+    }
   };
 
   return (
     <div>
-      <h2>Add User</h2>
+      <h2>{editUser ? "Edit User" : "Add User"}</h2>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -46,7 +62,9 @@ function UserForm() {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <button type="submit">Add User</button>
+        <button type="submit">
+          {editUser ? "Update" : "Add"}
+        </button>
       </form>
     </div>
   );
